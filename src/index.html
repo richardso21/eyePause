@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>eyePause</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div>
+      <h1 class="title">eyePause 👀⏸️</h1>
+      <h5 class="subtitle">Bring justice back to your eyes!</h5>
+      <img id="closeButton" src="assets/close.png" alt="" />
+    </div>
+
+    <label class="switch">
+      <input type="checkbox" checked id="toggler" onclick="toggleFunc()">
+      <span class="slider round"></span>
+    </label>
+
+    <table class="u-full-width settings">
+      <thead>
+        <tr>
+          <th>Settings</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="setting-name">Break Interval (min)</td>
+          <div id="breakIntBtns">
+            <td><button class="button">30</button></td>
+            <td><button class="button">20</button></td>
+            <td><button class="button">15</button></td>
+          </div>
+          <td>
+            <!-- <input type="number" placeholder="Custom" id="customBreakInt" /> -->
+          </td>
+        </tr>
+
+        <tr>
+          <td class="setting-name">Break Duration (min)</td>
+          <div id="breakDurBtns">
+            <td><button class="button">7</button></td>
+            <td><button class="button">5</button></td>
+            <td><button class="button">2.5</button></td>
+          </div>
+          <td>
+            <!-- <input type="number" placeholder="Custom" id="customBreakDur" /> -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="funcBtns">
+      <button class="button-primary">Testing</button>
+      <button class="button" id="exitButton">Exit</button>
+    </div>
+
+    <script defer src="renderer.js"></script>
+  </body>
+</html>
