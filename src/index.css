@@ -32,9 +32,19 @@ body {
 }
 
 button,
-/* input, */
+input,
 #closeButton {
   -webkit-app-region: no-drag;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .funcBtns {
@@ -43,15 +53,10 @@ button,
   bottom: 5%;
 }
 
-/* input {
-  width: 75%;
-} */
-
-/* #customBreakInt,
-#customBreakDur {
-  margin-bottom: 1rem;
+#exitButton {
+  background-color: red;
+  border-color: red;
 }
- */
 
 /* css for switch icon */
 .switch {

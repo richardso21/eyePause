@@ -1,4 +1,12 @@
-const { app, BrowserWindow, Tray, Menu, ipcMain, dialog } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  Tray,
+  Menu,
+  ipcMain,
+  dialog,
+  Notification,
+} = require("electron");
 const path = require("path");
 const { Timer } = require("easytimer.js");
 const Store = require("electron-store");
@@ -11,6 +19,7 @@ if (require("electron-squirrel-startup")) {
 
 let mainWindow = null;
 let mainTray = null;
+let overlayWindow = null;
 
 // creating main window & tray
 const main = () => {
@@ -27,28 +36,22 @@ const main = () => {
   });
   // load html + css on main window
   mainWindow.loadFile(path.join(__dirname, "index.html"));
+  mainWindow.isVisible();
   // create tray w/ icon
   mainTray = new Tray(path.join(__dirname, "assets/eyes.png"));
   const menu = Menu.buildFromTemplate([
     {
-      label: "Show",
+      label: "Show/Hide",
       click() {
-        mainWindow.show();
-      },
-    },
-    {
-      label: "Hide",
-      click() {
-        mainWindow.hide();
+        if (mainWindow.isVisible()) {
+          mainWindow.hide();
+        } else {
+          mainWindow.show();
+        }
       },
     },
     {
       type: "separator",
-    },
-    {
-      label: "Halt Breaking",
-      type: "checkbox",
-      checked: false,
     },
     {
       label: "Quit",
@@ -68,36 +71,71 @@ const main = () => {
 // execute once electron is ready
 app.on("ready", main);
 
-// >>> timer-related functions thru ipc
-let IntTimer = new Timer();
-ipcMain.on("startIntTimer", (e, minutes) => {
-  IntTimer.start({ countdown: true, startValues: { minutes: minutes } });
-});
+// >>> timer-related functions
+let IntTimer = new Timer({ countdown: true });
+let BkTimer = new Timer({ countdown: true });
 
-ipcMain.on("pauseIntTimer", () => {
-  IntTimer.pause();
-});
+function startTimer(timer, minutes) {
+  timer.start({ startValues: { minutes: minutes } });
+}
 
-ipcMain.on("resumeIntTimer", () => {
-  if (IntTimer.isPaused) {
+startTimer(IntTimer, store.get("BreakInt"));
+
+ipcMain.on("toggleIntTimer", () => {
+  if (IntTimer.isPaused()) {
     IntTimer.start();
+  } else {
+    IntTimer.pause();
   }
 });
 
-ipcMain.on("stopIntTimer", () => {
+ipcMain.on("resetIntTimer", () => {
   IntTimer.stop();
+  startTimer(IntTimer, store.get("BreakInt"));
 });
 
-ipcMain.on("getIntTimeRemaining", (event, arg) => {
-  event.returnValue = IntTimer.getTimeValues();
+IntTimer.on("secondsUpdated", () => {
+  const minutesLeft = IntTimer.getTimeValues().minutes;
+  if ([10, 5, 1].includes(minutesLeft)) {
+    const notif = new Notification({
+      title: "eyePause",
+      body: `You have ${minutesLeft} minute(s) left before your break!`,
+    });
+    notif.show();
+  }
 });
 
 IntTimer.on("targetAchieved", () => {
-  // ipcMain.
-});
-// <<< timer-related functions thru ipc
+  // TODO Move timers into other js modules, I can't handle this anymore!!! 
 
-// confirm for exit
+  IntTimer.stop();
+
+  startTimer(BkTimer, store.get("BreakDur"));
+  overlayWindow = new BrowserWindow({
+    transparent: true,
+    fullscreen: true,
+    kiosk: true,
+    frame: false,
+    movable: false,
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+  overlayWindow.setAlwaysOnTop(true, "screen-saver");
+  overlayWindow.loadFile(path.join(__dirname, "assets/break.html"));
+
+  BkTimer.on("targetAchieved", () => {
+    overlayWindow.close();
+  });
+
+  overlayWindow.on("close", () => {
+    startTimer(IntTimer, store.get("BreakInt"));
+  });
+});
+// <<< timer-related functions
+
+// exit confirmation from ipc or `index.js`
 function exitConfirm() {
   const options = {
     type: "question",
@@ -111,13 +149,7 @@ function exitConfirm() {
     }
   });
 }
-// ipc main listener
 ipcMain.on("exitConfirm", exitConfirm);
-
-// receive exit signal and quit
-ipcMain.on("exitSig", () => {
-  app.quit();
-});
 
 // boilerplate
 app.on("window-all-closed", () => {
@@ -127,6 +159,6 @@ app.on("window-all-closed", () => {
 });
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    main();
   }
 });

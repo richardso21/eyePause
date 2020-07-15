@@ -1,29 +1,38 @@
 const { remote, ipcRenderer } = require("electron");
-const path = require("path");
 const Store = require("electron-store");
 const store = new Store({ defaults: { BreakInt: 30, BreakDur: 5 } });
 
+// load onto input fields
+const inputBreakInt = document.getElementById("inputBreakInt");
+const inputBreakDur = document.getElementById("inputBreakDur");
+
+inputBreakInt.setAttribute("value", store.get("BreakInt").toString());
+inputBreakDur.setAttribute("value", store.get("BreakDur").toString());
+
 // event listeners for button toggle
 const toggler = document.getElementById("toggler");
-const sbtitle = document.querySelector(".subtitle");
+const subtitle = document.querySelector(".subtitle");
 function toggleFunc() {
   if (toggler.checked == true) {
     document.body.style.backgroundColor = "#bcf5d1";
-    sbtitle.innerHTML = "Bring justice back to your eyes!";
-
-    ipcRenderer.send("resumeIntTimer");
+    subtitle.innerHTML = "Bring justice back to your eyes!";
   } else {
     document.body.style.backgroundColor = "#f5bcbc";
-    sbtitle.innerHTML = "eyePause is NOT enabled!";
-
-    const timeRemaining = ipcRenderer.sendSync("getIntTimeRemaining");
-    if (timeRemaining.minutes < 2) {
-      ipcRenderer.send("stopIntTimer");
-    } else {
-      ipcRenderer.send("pauseIntTimer");
-    }
+    subtitle.innerHTML = "eyePause is NOT enabled!";
   }
+  // toggle state of timer
+  ipcRenderer.send("toggleIntTimer");
 }
+toggler.addEventListener("click", toggleFunc);
+
+// save options thru `electron-store` once pressed on button
+const saveButton = document.getElementById("saveButton");
+saveButton.addEventListener("click", () => {
+  store.set("BreakInt", parseInt(inputBreakInt.getAttribute("value")));
+  store.set("BreakDur", parseInt(inputBreakDur.getAttribute("value")));
+
+  ipcRenderer.send("resetIntTimer");
+});
 
 // exit once pressed on button
 const exitButton = document.getElementById("exitButton");
