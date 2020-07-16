@@ -14,7 +14,7 @@
         margin: 0;
         padding: 0;
         font-size: 24px;
-        animation: dim 5s forwards;
+        animation: dim 2s forwards;
       }
       @keyframes dim {
         from {
@@ -40,7 +40,13 @@
         font-weight: bolder;
       }
       #quitEarly {
-        background-color: red;
+        transform: scale(0.75);
+        font-family: "Raleway";
+        color: gray;
+        transition: all .25s ease;
+      }
+      #quitEarly:hover {
+        color: black;
         border-color: red;
       }
     </style>
@@ -54,7 +60,7 @@
         shown below is how long before this break ends!
       </p>
       <h1 id="breakTimer"></h1>
-      <button class="button-primary" id="quitEarly">
+      <button class="button" id="quitEarly">
         Quit the Break Early
       </button>
     </div>

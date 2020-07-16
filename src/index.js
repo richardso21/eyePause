@@ -1,6 +1,8 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain, dialog } = require("electron");
 const path = require("path");
 
+const icon = path.join(__dirname, "assets/eyes.ico");
+
 // boilerplate
 if (require("electron-squirrel-startup")) {
   app.quit();
@@ -14,6 +16,7 @@ let overlayWindow = null;
 const main = () => {
   // create menu
   mainWindow = new BrowserWindow({
+    icon: icon,
     width: 650,
     height: 500,
     frame: false,
@@ -27,7 +30,7 @@ const main = () => {
   mainWindow.loadFile(path.join(__dirname, "index.html"));
   mainWindow.isVisible();
   // create tray w/ icon
-  mainTray = new Tray(path.join(__dirname, "assets/eyes.png"));
+  mainTray = new Tray(icon);
   const menu = Menu.buildFromTemplate([
     {
       label: "Show/Hide",
@@ -63,6 +66,7 @@ app.on("ready", main);
 // once interval timer is done, bring up overlay
 ipcMain.on("IntTimerDone", () => {
   overlayWindow = new BrowserWindow({
+    icon: icon,
     transparent: true,
     fullscreen: true,
     kiosk: true,

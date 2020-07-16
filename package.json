@@ -2,7 +2,7 @@
   "name": "eyepause",
   "productName": "eyepause",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Bring justice back to your eyes!",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -12,7 +12,7 @@
     "lint": "echo \"No linting configured\""
   },
   "keywords": [],
-  "author": "rs21",
+  "author": "Richard So",
   "license": "MIT",
   "config": {
     "forge": {
@@ -21,7 +21,9 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "eyepause"
+            "name": "eyepause",
+            "setupIcon": "./src/assets/eyes.ico",
+            "iconUrl": "https://dl.dropboxusercontent.com/s/p7tt7wlwfsfi9d9/eyes.ico"
           }
         },
         {
