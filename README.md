@@ -1,6 +1,5 @@
-# eyePause 👀⏸
-**This app is still in active development.**
+# eyePause 1.0 👀⏸
 
-Take periodic rests from your computer screen with the help of eyePause. Running in the background, it will handle all the timing and alert you when it's time to step away. 
+Take periodic rests from your computer screen with the help of eyePause! Running in the background, it will alert you when it's time to step away. Preset to take 5-minute breaks every 30 minutes, but can be configured in the eyePause menu. 
 
-Built using trusty Electron and electron-forge. Works right out of the box, ***supported on Windows, macOS and Linux!***
+Built using Electron on Javascript. Works right out of the box, ***supported on Windows, macOS and Linux!***
