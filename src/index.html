@@ -31,11 +31,6 @@
       <tbody>
         <tr>
           <td class="setting-name">Break Interval (min)</td>
-          <!-- <div id="breakIntBtns">
-            <td><button class="button btn-setting">30</button></td>
-            <td><button class="button btn-setting">20</button></td>
-            <td><button class="button btn-setting">15</button></td>
-          </div> -->
           <td>
             <input type="number" placeholder="Minutes" id="inputBreakInt" />
           </td>
@@ -43,17 +38,16 @@
 
         <tr>
           <td class="setting-name">Break Duration (min)</td>
-          <!-- <div id="breakDurBtns">
-            <td><button class="button btn-setting">7</button></td>
-            <td><button class="button btn-setting">5</button></td>
-            <td><button class="button btn-setting">2.5</button></td>
-          </div> -->
           <td>
             <input type="number" placeholder="Minutes" id="inputBreakDur" />
           </td>
         </tr>
       </tbody>
     </table>
+
+    <div class="time">
+      <p>Time remaining until next break: <span id="timer"></span></p>
+    </div>
 
     <div class="funcBtns">
       <button class="button-primary" id="saveButton">Save</button>

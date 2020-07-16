@@ -9,13 +9,40 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
     />
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Raleway&display=swap");
       body {
         margin: 0;
         padding: 0;
-        background-color: rgba(128, 128, 128, 0.5);
-        transition: all 2s ease;
+        font-size: 24px;
+        animation: dim 5s forwards;
       }
-      
+      @keyframes dim {
+        from {
+          background-color: rgba(0, 0, 0, 0);
+        }
+        to {
+          background-color: rgba(0, 0, 0, 0.6);
+        }
+      }
+      .container {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background: #8de0ab;
+        width: 600px;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 0 5px 5px black;
+      }
+      #breakTimer {
+        font-weight: bolder;
+      }
+      #quitEarly {
+        background-color: red;
+        border-color: red;
+      }
     </style>
   </head>
   <body>
@@ -23,14 +50,13 @@
       <h1>Time for a break! 👀⏸️</h1>
       <p>
         Get up and stretch a little. Be sure to take your glasses off (if you
-        have any) and focus on another object other than this screen. The time
-        below is how long before this break ends!
+        have any) and focus on another object other than this screen. The timer
+        shown below is how long before this break ends!
       </p>
       <h1 id="breakTimer"></h1>
-      <p class="snoozeTip">
-        Snoozing is never the way to properly form this habit, but if you really
-        need to get back and doing something important, hover here for a tip:
-      </p>
+      <button class="button-primary" id="quitEarly">
+        Quit the Break Early
+      </button>
     </div>
     <script defer src="break.js"></script>
   </body>

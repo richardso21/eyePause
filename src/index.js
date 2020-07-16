@@ -1,16 +1,5 @@
-const {
-  app,
-  BrowserWindow,
-  Tray,
-  Menu,
-  ipcMain,
-  dialog,
-  Notification,
-} = require("electron");
+const { app, BrowserWindow, Tray, Menu, ipcMain, dialog } = require("electron");
 const path = require("path");
-const { Timer } = require("easytimer.js");
-const Store = require("electron-store");
-const store = new Store({ defaults: { BreakInt: 30, BreakDur: 5 } });
 
 // boilerplate
 if (require("electron-squirrel-startup")) {
@@ -71,46 +60,8 @@ const main = () => {
 // execute once electron is ready
 app.on("ready", main);
 
-// >>> timer-related functions
-let IntTimer = new Timer({ countdown: true });
-let BkTimer = new Timer({ countdown: true });
-
-function startTimer(timer, minutes) {
-  timer.start({ startValues: { minutes: minutes } });
-}
-
-startTimer(IntTimer, store.get("BreakInt"));
-
-ipcMain.on("toggleIntTimer", () => {
-  if (IntTimer.isPaused()) {
-    IntTimer.start();
-  } else {
-    IntTimer.pause();
-  }
-});
-
-ipcMain.on("resetIntTimer", () => {
-  IntTimer.stop();
-  startTimer(IntTimer, store.get("BreakInt"));
-});
-
-IntTimer.on("secondsUpdated", () => {
-  const minutesLeft = IntTimer.getTimeValues().minutes;
-  if ([10, 5, 1].includes(minutesLeft)) {
-    const notif = new Notification({
-      title: "eyePause",
-      body: `You have ${minutesLeft} minute(s) left before your break!`,
-    });
-    notif.show();
-  }
-});
-
-IntTimer.on("targetAchieved", () => {
-  // TODO Move timers into other js modules, I can't handle this anymore!!! 
-
-  IntTimer.stop();
-
-  startTimer(BkTimer, store.get("BreakDur"));
+// once interval timer is done, bring up overlay
+ipcMain.on("IntTimerDone", () => {
   overlayWindow = new BrowserWindow({
     transparent: true,
     fullscreen: true,
@@ -125,15 +76,11 @@ IntTimer.on("targetAchieved", () => {
   overlayWindow.setAlwaysOnTop(true, "screen-saver");
   overlayWindow.loadFile(path.join(__dirname, "assets/break.html"));
 
-  BkTimer.on("targetAchieved", () => {
-    overlayWindow.close();
-  });
-
+  // execute interval timer again once break timer is done
   overlayWindow.on("close", () => {
-    startTimer(IntTimer, store.get("BreakInt"));
+    mainWindow.webContents.send("IntTimerStart");
   });
 });
-// <<< timer-related functions
 
 // exit confirmation from ipc or `index.js`
 function exitConfirm() {
