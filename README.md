@@ -1,6 +1,6 @@
 # eyePause 1.0 👀⏸
 
-Take periodic rests from your computer screen with the help of eyePause! Running in the background, it will alert you when it's time to step away. 
+Take periodic rests from your computer screen with the help of eyePause! Running in the background, it will alert you when it's time to step away. *Heavily inspired by [stretchly](https://github.com/hovancik/stretchly).*
 
 Preset to take 5-minute breaks every 30 minutes, but can be configured in the eyePause menu. 
 
