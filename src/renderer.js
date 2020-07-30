@@ -4,7 +4,7 @@ const { Timer } = require("easytimer.js");
 const IntTimer = new Timer({ countdown: true });
 const path = require("path");
 const Store = require("electron-store");
-const store = new Store({ defaults: { BreakInt: 30, BreakDur: 5 } });
+const store = new Store({ defaults: { BreakInt: 30, BreakDur: 5, Skips: 0 } });
 
 // constant variables of document elements
 const timer = document.getElementById("timer");
@@ -108,6 +108,13 @@ function toggleFunc() {
   }
 }
 toggler.addEventListener("click", toggleFunc);
+
+// event listener after idle
+ipcRenderer.on("userIdledToggle", () => {
+  if (toggler.checked) toggler.checked = false;
+  else toggler.checked = true;
+  toggleFunc();
+});
 
 // save options thru `electron-store` once pressed on button
 saveButton.addEventListener("click", () => {
